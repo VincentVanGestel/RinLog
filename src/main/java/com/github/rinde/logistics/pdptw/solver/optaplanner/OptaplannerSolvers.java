@@ -174,7 +174,7 @@ public final class OptaplannerSolvers {
     final List<Vehicle> vehicleList = new ArrayList<>();
     for (int i = 0; i < state.getVehicles().size(); i++) {
       final VehicleStateObject vso = state.getVehicles().get(i);
-      final Vehicle vehicle = new Vehicle(vso, i);
+      final Vehicle vehicle = new Vehicle(vso, state.getTravelTimes(), i);
       vehicleList.add(vehicle);
 
       final List<ParcelVisit> visits = new ArrayList<>();

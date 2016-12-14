@@ -17,24 +17,26 @@ package com.github.rinde.logistics.pdptw.solver.optaplanner;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.math.RoundingMode;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
+import javax.measure.Measure;
+import javax.measure.unit.NonSI;
 
 import com.github.rinde.rinsim.central.GlobalStateObject.VehicleStateObject;
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
+import com.github.rinde.rinsim.core.model.road.TravelTimes;
 import com.github.rinde.rinsim.geom.Point;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.math.DoubleMath;
 
 /**
  *
  * @author Rinde van Lon
  */
 public class Vehicle implements Visit {
-  static final double H_TO_NS = 3600000000000d;
+  static final long H_TO_NS = 3600000000000L;
+  static final long MILLIS_TO_NS = 1000000L;
   // planning variables
   @Nullable
   final Visit previousVisit = null;
@@ -45,19 +47,22 @@ public class Vehicle implements Visit {
 
   // problem facts
   private final VehicleStateObject vehicle;
+  private final TravelTimes travelTimes;
   private final long endTime;
   private final long remainingServiceTime;
   private final int index;
 
   Vehicle() {
     vehicle = null;
+    travelTimes = null;
     endTime = -1;
     remainingServiceTime = -1;
     index = -1;
   }
 
-  Vehicle(VehicleStateObject vso, int ind) {
+  Vehicle(VehicleStateObject vso, TravelTimes tt, int ind) {
     vehicle = vso;
+    travelTimes = tt;
     endTime = Util.msToNs(vso.getDto().getAvailabilityTimeWindow()).end();
     remainingServiceTime = vso.getRemainingServiceTime() > 0
       ? Util.msToNs(vso.getRemainingServiceTime()) : 0;
@@ -131,14 +136,22 @@ public class Vehicle implements Visit {
   }
 
   public long computeTravelTime(Point from, Point to) {
+
     final double speedKMH = vehicle.getDto().getSpeed();
 
-    final double distKM = Point.distance(from, to);
+    Point fromConn = from;
+    // If the vehicle is on a connection in a graph
+    // Round position to the starting position.
+    if (vehicle.getConnection().isPresent()) {
+      fromConn = vehicle.getConnection().get().from();
+    }
 
-    final double travelTimeH = distKM / speedKMH;
+    final long travelTimeMILLIS =
+      travelTimes.getTheoreticalShortestTravelTime(fromConn, to,
+        Measure.valueOf(speedKMH, NonSI.KILOMETERS_PER_HOUR));
+
     // convert to nanoseconds
-    return DoubleMath.roundToLong(travelTimeH * H_TO_NS,
-      RoundingMode.HALF_DOWN);
+    return travelTimeMILLIS * MILLIS_TO_NS;
   }
 
   @Override
