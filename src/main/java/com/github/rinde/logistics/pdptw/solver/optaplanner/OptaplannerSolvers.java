@@ -104,7 +104,7 @@ public final class OptaplannerSolvers {
 
   static final Unit<Duration> TIME_UNIT = SI.MILLI(SI.SECOND);
   static final Unit<Velocity> SPEED_UNIT = NonSI.KILOMETERS_PER_HOUR;
-  static final Unit<Length> DISTANCE_UNIT = SI.KILOMETER;
+  static final Unit<Length> DISTANCE_UNIT = SI.KILOMETER; // SI.METER
   static final String NAME_SEPARATOR = "-";
 
   // this is part of a while loop

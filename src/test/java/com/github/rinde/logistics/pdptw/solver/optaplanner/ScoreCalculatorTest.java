@@ -64,6 +64,7 @@ public class ScoreCalculatorTest {
       .addVehicle(GlobalStateObjectBuilder.vehicleBuilder()
         .setRoute(ImmutableList.copyOf(parcels))
         .build())
+      .setPlaneTravelTimes(new Point(0, 0), new Point(10, 10))
       .buildUnsafe();
     return OptaplannerSolvers.convert(gso);
   }

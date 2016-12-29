@@ -156,6 +156,7 @@ public class RealtimeSolverTest {
     return builder.addVehicle(GlobalStateObjectBuilder.vehicleBuilder()
       .setRoute(ImmutableList.<Parcel>of())
       .build())
+      .setPlaneTravelTimes(new Point(0, 0), new Point(10, 10))
       .build();
   }
 
