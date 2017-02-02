@@ -146,12 +146,14 @@ public class Vehicle implements Visit {
       fromConn = vehicle.getConnection().get().from();
     }
 
-    final long travelTimeMILLIS =
-      travelTimes.getTheoreticalShortestTravelTime(fromConn, to,
+    final double travelTimeMILLIS =
+      travelTimes.getCurrentShortestTravelTime(fromConn, to,
         Measure.valueOf(speedKMH, NonSI.KILOMETERS_PER_HOUR));
+    // travelTimes.getTheoreticalShortestTravelTime(fromConn, to,
+    // Measure.valueOf(speedKMH, NonSI.KILOMETERS_PER_HOUR));
 
     // convert to nanoseconds
-    return travelTimeMILLIS * MILLIS_TO_NS;
+    return (long) (travelTimeMILLIS * MILLIS_TO_NS);
   }
 
   @Override
