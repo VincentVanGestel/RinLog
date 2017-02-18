@@ -32,7 +32,7 @@ import org.optaplanner.core.impl.score.director.incremental.IncrementalScoreDire
 import com.github.rinde.rinsim.central.GlobalStateObjectBuilder;
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.VehicleDTO;
-import com.github.rinde.rinsim.core.model.road.TravelTimesTestUtil;
+import com.github.rinde.rinsim.core.model.road.RoadModelSnapshotTestUtil;
 import com.github.rinde.rinsim.geom.Point;
 import com.google.common.collect.ImmutableList;
 
@@ -496,8 +496,8 @@ public class MoveTest {
         .build());
     }
 
-    b.setTravelTimes(TravelTimesTestUtil.createDefaultPlaneTravelTimes(
-      new Point(0, 0), new Point(10, 10), SI.MILLI(SI.SECOND), SI.KILOMETER));
+    b.setSnapshot(RoadModelSnapshotTestUtil.createPlaneRoadModelSnapshot(
+      new Point(0, 0), new Point(10, 10), SI.KILOMETER));
 
     return OptaplannerSolvers.convert(b.build());
   }
